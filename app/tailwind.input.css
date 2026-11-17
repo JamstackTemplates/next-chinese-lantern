@@ -1,0 +1,601 @@
+/* Acme Dumpling House styles: Tailwind CSS v4 plus this template's customizations.
+   Components use Tailwind utility classes; this file holds what utilities can't:
+   1. colour tokens for light/dark   2. the Tailwind theme built from them
+   3. base element styles           4. shared building blocks (.button, .seal, .eyebrow, ...)
+   5. illustrations and animation   6. stateful pieces styled by data attributes */
+@import 'tailwindcss';
+
+/* `dark:` follows the jamstacks theme toggle (html.dark). Prefer colour tokens instead. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ------------------------------------------------------------------
+   1. Colour tokens. Change the palette here.
+   Light mode is "lacquer and rice paper": warm paper, ink, lacquer red, gold leaf and jade.
+   Dark mode is "lantern-lit night": lacquer black, an oxblood signboard and glowing lanterns.
+   Every colour that changes with the theme is a variable here, so components use
+   utilities like `bg-surface text-ink` and never need `dark:` variants.
+   ------------------------------------------------------------------ */
+:root {
+  --bg: #f6f0e4;
+  --surface: #fbf7ee;
+  --surface-2: #efe6d3;
+  --text: #1d1414;
+  --muted: #5b4943;
+  --line: #ddcfb4;
+  /* Lacquer red: buttons, seals and the signboard. Dark enough for white text. */
+  --accent: #a3161a;
+  --accent-strong: #7a0e12;
+  --accent-soft: #f4ddd3;
+  /* Red for text on the page (links, small labels). */
+  --accent-ink: #a3161a;
+  --on-accent: #ffffff;
+  /* Gold leaf: decorative rules and ornaments; gold-ink is the darker gold used for text on paper. */
+  --gold: #b8862b;
+  --gold-ink: #7d5a12;
+  --gold-soft: #efe0bd;
+  /* Jade: vegetarian marks and links. */
+  --jade: #2f6b5a;
+  --jade-soft: #dbe8df;
+  --danger: #a3161a;
+  --success: #2f6b5a;
+  --focus: #a3161a;
+  --elev-1: 0 1px 2px rgba(70, 30, 20, .07), 0 4px 12px rgba(70, 30, 20, .06);
+  --elev-2: 0 2px 4px rgba(70, 30, 20, .06), 0 22px 44px -18px rgba(90, 20, 10, .28);
+
+  /* Signboard (the rail on desktop, the sign bar on phones). */
+  --rail-1: #b31d20;
+  --rail-2: #a3161a;
+  --rail-3: #7e0f13;
+  --rail-ink: #fff3e2;
+  --rail-gold: #f6d88c;
+  --rail-board: #7a0f12;
+  --rail-line: rgba(242, 205, 119, .5);
+  /* Gold leaf gradient stops for the rail edge and rules. */
+  --leaf-1: #f6dc8f;
+  --leaf-2: #c9952f;
+  --leaf-3: #8f6416;
+
+  /* Lanterns */
+  --lantern: #d3261f;
+  --lantern-shade: #9c1316;
+  --lantern-cap: #d8a13c;
+  --lantern-cord: #3b1b14;
+  --lantern-glow: #ff6a3d;
+  --glow-opacity: 0;
+
+  /* Seal stamps and line drawings */
+  --seal: #a3161a;
+  --seal-ink: #fff6ea;
+  --art: #8a6414;
+  --steam: rgba(138, 100, 20, .45);
+
+  /* Rice-paper fibres (light) / faint lacquer grain (dark). */
+  --texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='300' fill='none' stroke='%23a88c5c' stroke-linecap='round'%3E%3Cpath d='M14 38c26-5 44 3 70-1M188 22c14 6 30 4 52 9M40 128c18 5 26 1 44 6M226 104c20-3 30 6 52 3M10 222c22 3 36-5 58 0M150 196c16 8 40 1 64 7M96 282c18-4 30 2 48-1M262 266c12-5 26-1 46-4M300 58c10 4 22 2 40 6M120 70c6 9 3 15 10 23' stroke-width='.5' opacity='.42'/%3E%3Cpath d='M80 170c6 7 4 13 11 19M320 150c-4 9 1 16-4 24M56 260c7 6 4 12 10 17M200 250c-3 8 3 12 0 19' stroke-width='.4' opacity='.32'/%3E%3C/svg%3E");
+
+  /* Google Maps embed: untouched in light mode */
+  --map-filter: none;
+
+  --measure: 40rem;
+  --page: 72rem;
+  --gutter: clamp(1rem, 4vw, 2.75rem);
+  --space-section: clamp(3.5rem, 7vw, 6rem);
+  --rail-w: 16.5rem;
+  /* Height of the sticky sign bar on phones and tablets (0 on desktop, where the rail is at the side). */
+  --bar-h: 3.75rem;
+
+  /* --------------------------------------------------------------
+     Jamstacks component fallbacks (inherited by hosted components).
+     Published portal themes may override these on the host element.
+     Never style the component's shadow-root internals directly.
+     -------------------------------------------------------------- */
+  --jamstacks-font-family: var(--font-sans);
+  --jamstacks-font-size: 17px;
+  --jamstacks-color-primary: var(--accent);
+  --jamstacks-color-background: var(--surface);
+  --jamstacks-color-text: var(--text);
+  --jamstacks-color-muted: var(--muted);
+  --jamstacks-color-border: var(--line);
+  --jamstacks-color-danger: var(--danger);
+  --jamstacks-color-success: var(--success);
+  --jamstacks-border-radius: var(--radius-ui);
+  --jamstacks-control-height: 48px;
+  --jamstacks-spacing: 14px;
+  /* Component extension supported by the current support-form runtime: fill the page column. */
+  --jamstacks-form-max-width: 100%;
+
+  /* Shared theme toggle (jamstacks package). It sits on the lacquer signboard in both modes. */
+  --jamstacks-toggle-color: var(--rail-gold);
+  --jamstacks-toggle-dark-color: var(--rail-gold);
+  --jamstacks-toggle-border: var(--rail-line);
+  --jamstacks-toggle-background: rgba(255, 236, 200, .14);
+  --jamstacks-toggle-dark-background: rgba(255, 236, 200, .12);
+
+  color-scheme: light;
+}
+
+/* Explicit choices override the device; the media fallback also works without JavaScript.
+   Keep these two blocks identical. */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    color-scheme: dark;
+    --bg: #120d0d;
+    --surface: #1f1515;
+    --surface-2: #2a1c1b;
+    --text: #f4e7d4;
+    --muted: #c7b29d;
+    --line: #3f2c28;
+    --accent: #b51d21;
+    --accent-strong: #ff9474;
+    --accent-soft: #3a1714;
+    --accent-ink: #ff8f72;
+    --on-accent: #ffffff;
+    --gold: #c99a45;
+    --gold-ink: #e3b65c;
+    --gold-soft: #33261a;
+    --jade: #7fc6ab;
+    --jade-soft: #16271f;
+    --danger: #ff8f72;
+    --success: #7fc6ab;
+    --focus: #e3b65c;
+    --elev-1: 0 1px 2px rgba(0, 0, 0, .45);
+    --elev-2: 0 2px 4px rgba(0, 0, 0, .4), 0 26px 50px -18px rgba(0, 0, 0, .8);
+
+    --rail-1: #4d0f13;
+    --rail-2: #3b0a0d;
+    --rail-3: #250507;
+    --rail-ink: #f8e7cf;
+    --rail-gold: #e8bd62;
+    --rail-board: #2a0608;
+    --rail-line: rgba(232, 189, 98, .42);
+    --leaf-1: #f0cf7c;
+    --leaf-2: #b88a35;
+    --leaf-3: #6e4c12;
+
+    --lantern: #ff5a2e;
+    --lantern-shade: #c42a17;
+    --lantern-cap: #e8bd62;
+    --lantern-cord: #0c0505;
+    --lantern-glow: #ff6a3d;
+    --glow-opacity: 1;
+
+    --seal: #b51d21;
+    --seal-ink: #fff3e2;
+    --art: #e3b65c;
+    --steam: rgba(243, 222, 190, .4);
+
+    --texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='300' fill='none' stroke='%23e3b65c' stroke-linecap='round'%3E%3Cpath d='M14 38c26-5 44 3 70-1M188 22c14 6 30 4 52 9M40 128c18 5 26 1 44 6M226 104c20-3 30 6 52 3M10 222c22 3 36-5 58 0M150 196c16 8 40 1 64 7M96 282c18-4 30 2 48-1M262 266c12-5 26-1 46-4M300 58c10 4 22 2 40 6M120 70c6 9 3 15 10 23' stroke-width='.5' opacity='.28'/%3E%3Cpath d='M80 170c6 7 4 13 11 19M320 150c-4 9 1 16-4 24M56 260c7 6 4 12 10 17M200 250c-3 8 3 12 0 19' stroke-width='.4' opacity='.2'/%3E%3C/svg%3E");
+
+    --map-filter: invert(.9) hue-rotate(180deg) saturate(.55) brightness(.85) contrast(.92) sepia(.2);
+
+    /* The hosted form draws white button text, so its primary stays lacquer red. */
+    --jamstacks-color-primary: #a3161a;
+  }
+}
+
+:root.dark {
+  color-scheme: dark;
+  --bg: #120d0d;
+  --surface: #1f1515;
+  --surface-2: #2a1c1b;
+  --text: #f4e7d4;
+  --muted: #c7b29d;
+  --line: #3f2c28;
+  --accent: #b51d21;
+  --accent-strong: #ff9474;
+  --accent-soft: #3a1714;
+  --accent-ink: #ff8f72;
+  --on-accent: #ffffff;
+  --gold: #c99a45;
+  --gold-ink: #e3b65c;
+  --gold-soft: #33261a;
+  --jade: #7fc6ab;
+  --jade-soft: #16271f;
+  --danger: #ff8f72;
+  --success: #7fc6ab;
+  --focus: #e3b65c;
+  --elev-1: 0 1px 2px rgba(0, 0, 0, .45);
+  --elev-2: 0 2px 4px rgba(0, 0, 0, .4), 0 26px 50px -18px rgba(0, 0, 0, .8);
+
+  --rail-1: #4d0f13;
+  --rail-2: #3b0a0d;
+  --rail-3: #250507;
+  --rail-ink: #f8e7cf;
+  --rail-gold: #e8bd62;
+  --rail-board: #2a0608;
+  --rail-line: rgba(232, 189, 98, .42);
+  --leaf-1: #f0cf7c;
+  --leaf-2: #b88a35;
+  --leaf-3: #6e4c12;
+
+  --lantern: #ff5a2e;
+  --lantern-shade: #c42a17;
+  --lantern-cap: #e8bd62;
+  --lantern-cord: #0c0505;
+  --lantern-glow: #ff6a3d;
+  --glow-opacity: 1;
+
+  --seal: #b51d21;
+  --seal-ink: #fff3e2;
+  --art: #e3b65c;
+  --steam: rgba(243, 222, 190, .4);
+
+  --texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='300' fill='none' stroke='%23e3b65c' stroke-linecap='round'%3E%3Cpath d='M14 38c26-5 44 3 70-1M188 22c14 6 30 4 52 9M40 128c18 5 26 1 44 6M226 104c20-3 30 6 52 3M10 222c22 3 36-5 58 0M150 196c16 8 40 1 64 7M96 282c18-4 30 2 48-1M262 266c12-5 26-1 46-4M300 58c10 4 22 2 40 6M120 70c6 9 3 15 10 23' stroke-width='.5' opacity='.28'/%3E%3Cpath d='M80 170c6 7 4 13 11 19M320 150c-4 9 1 16-4 24M56 260c7 6 4 12 10 17M200 250c-3 8 3 12 0 19' stroke-width='.4' opacity='.2'/%3E%3C/svg%3E");
+
+  --map-filter: invert(.9) hue-rotate(180deg) saturate(.55) brightness(.85) contrast(.92) sepia(.2);
+
+  /* The hosted form draws white button text, so its primary stays lacquer red. */
+  --jamstacks-color-primary: #a3161a;
+}
+
+/* ------------------------------------------------------------------
+   2. Tailwind theme. Only this template's palette exists: Tailwind's default colours
+   are switched off so new UI can't drift into a generic look.
+   ------------------------------------------------------------------ */
+@theme {
+  --color-*: initial;
+  --breakpoint-xs: 25rem;
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 48rem;
+  /* The signboard moves from a top bar to the side rail at lg. */
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+  /* Wide enough for the two-column menu beside the takeaway panel. */
+  --breakpoint-2xl: 88rem;
+}
+
+@theme static {
+  /* Display: Noto Serif Display, a high-contrast serif with a brushed, calligraphic edge. */
+  --font-display: "Noto Serif Display Variable", "Noto Serif", Georgia, "Times New Roman", serif;
+  /* Text: Source Sans 3, compact and clear for the dense menu. */
+  --font-sans: "Source Sans 3 Variable", "Source Sans Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* Chinese names: Noto Serif TC (Traditional), split into small unicode-range files. */
+  --font-zh: "Noto Serif TC", "Songti TC", "PMingLiU", "Noto Serif CJK TC", serif;
+  --radius-ui: 4px;
+  --radius-card: 6px;
+}
+
+@theme inline {
+  --color-white: #fff;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--text);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-ink: var(--accent-ink);
+  --color-on-accent: var(--on-accent);
+  --color-gold: var(--gold);
+  --color-gold-ink: var(--gold-ink);
+  --color-gold-soft: var(--gold-soft);
+  --color-jade: var(--jade);
+  --color-jade-soft: var(--jade-soft);
+  --color-rail: var(--rail-2);
+  --color-rail-ink: var(--rail-ink);
+  --color-rail-gold: var(--rail-gold);
+  --color-rail-board: var(--rail-board);
+  --color-rail-line: var(--rail-line);
+  --color-seal: var(--seal);
+  --color-seal-ink: var(--seal-ink);
+  --color-art: var(--art);
+  --shadow-card: var(--elev-1);
+  --shadow-lift: var(--elev-2);
+}
+
+/* Layout helpers used across pages. */
+@utility wrap {
+  width: min(100% - 2 * var(--gutter), var(--page));
+  margin-inline: auto;
+}
+@utility section-y {
+  padding-block: var(--space-section);
+}
+/* Chinese text: Noto Serif TC with a touch of tracking. */
+@utility font-zh-name {
+  font-family: var(--font-zh);
+  font-weight: 600;
+  letter-spacing: .06em;
+}
+/* Vertical Chinese lettering, read top to bottom like a shop sign. */
+@utility vertical {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+}
+
+/* ------------------------------------------------------------------
+   3. Base elements
+   ------------------------------------------------------------------ */
+@layer base {
+  html { background: var(--bg); scroll-padding-top: calc(var(--bar-h) + var(--toolbar-h, 0rem) + 1rem); }
+  body {
+    min-height: 100vh;
+    background-color: var(--bg);
+    background-image: var(--texture);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    font-variant-numeric: tabular-nums;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  main { outline: none; }
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.05; letter-spacing: -.01em; text-wrap: balance; }
+  h1 em, h2 em { font-style: italic; color: var(--accent-ink); }
+  [lang|="zh"] { font-family: var(--font-zh); font-weight: 600; }
+  p { text-wrap: pretty; }
+  abbr[title] { text-decoration: none; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 3px; }
+  ::selection { background: var(--gold-soft); color: var(--text); }
+  @media (width < 40rem) {
+    body { font-size: 1rem; }
+  }
+}
+
+/* Outside the layer, so it beats the unlayered tokens above. The menu's sticky filter bar adds to the offset. */
+:root:has(.menu-book) { --toolbar-h: 3.6rem; }
+@media (width >= 64rem) {
+  :root { --bar-h: 0rem; }
+}
+
+/* ------------------------------------------------------------------
+   4. Shared building blocks. Reuse these instead of restyling each instance.
+   ------------------------------------------------------------------ */
+@layer components {
+  .button {
+    display: inline-flex; align-items: center; justify-content: center; gap: .55rem;
+    min-height: 3rem; padding: .65rem 1.35rem;
+    border: 1px solid var(--accent-strong); border-radius: var(--radius-ui);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 88%, #fff), var(--accent) 45%, color-mix(in srgb, var(--accent) 85%, #000));
+    color: var(--on-accent);
+    font: inherit; font-weight: 700; letter-spacing: .01em; text-decoration: none; white-space: nowrap; cursor: pointer;
+    box-shadow: inset 0 0 0 1px rgba(255, 220, 150, .35), 0 2px 0 var(--accent-strong);
+    transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+  }
+  .button:hover { transform: translateY(-1px); filter: brightness(1.06); }
+  .button:active { transform: translateY(1px); }
+  .button-ghost {
+    background: transparent; color: var(--text); border-color: var(--gold);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gold) 30%, transparent);
+  }
+  .button-ghost:hover { border-color: var(--accent-ink); filter: none; }
+  .button-quiet { min-height: 2.5rem; padding: .4rem 1rem; background: transparent; color: var(--text); border-color: var(--line); box-shadow: none; font-weight: 600; }
+  .button-quiet:hover { border-color: var(--gold); filter: none; }
+  /* Gold-leaf button on the lacquer signboard. */
+  .button-leaf {
+    background: linear-gradient(180deg, var(--leaf-1), var(--leaf-2) 60%, var(--leaf-3));
+    color: #2a0a08; border-color: var(--leaf-3);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 2px 0 rgba(0, 0, 0, .25);
+  }
+  .button-sm { min-height: 2.5rem; padding: .35rem .9rem; font-size: .95rem; }
+
+  .text-link {
+    color: var(--accent-ink); font-weight: 600;
+    text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: .22em;
+    text-decoration-color: color-mix(in srgb, var(--accent-ink) 35%, transparent);
+  }
+  .text-link:hover { text-decoration-color: var(--accent-ink); }
+  .text-link-jade { color: var(--jade); text-decoration-color: color-mix(in srgb, var(--jade) 40%, transparent); }
+  .text-link-jade:hover { text-decoration-color: var(--jade); }
+
+  /* Small-caps label in gold ink, with a lattice diamond. */
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: .6rem;
+    font-size: .78rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--gold-ink);
+  }
+  .eyebrow::before {
+    content: ""; width: .55rem; height: .55rem; flex: none; rotate: 45deg;
+    border: 1.5px solid currentColor; box-shadow: inset 0 0 0 1.5px var(--bg), inset 0 0 0 3px currentColor;
+  }
+
+  /* Gold double rule, like the border of a printed menu. */
+  .rule-gold { border: 0; height: 5px; border-top: 1px solid var(--gold); border-bottom: 1px solid var(--gold); opacity: .8; }
+
+  /* A printed card: paper surface, thin gold frame with an inner rule. */
+  .menu-card {
+    position: relative; border-radius: var(--radius-card);
+    background: var(--surface); border: 1px solid color-mix(in srgb, var(--gold) 70%, transparent);
+    box-shadow: inset 0 0 0 4px var(--surface), inset 0 0 0 5px color-mix(in srgb, var(--gold) 40%, transparent), var(--elev-1);
+  }
+
+  /* Red seal stamp holding a dish number. The mask leaves a few unprinted flecks, like a real stamp. */
+  .seal {
+    display: inline-grid; place-items: center; flex: none;
+    width: 2.15rem; height: 2.15rem; border-radius: 3px;
+    background: radial-gradient(circle at 28% 22%, rgba(255, 255, 255, .14), transparent 45%), var(--seal);
+    color: var(--seal-ink);
+    font-family: var(--font-display); font-weight: 700; font-size: .98rem; line-height: 1; letter-spacing: -.02em;
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--seal-ink) 18%, transparent);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M1 2 39 1 38.4 39 1.4 38.6Z' fill='%23000'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='6' cy='33' r='.9'/%3E%3Ccircle cx='34' cy='7' r='.7'/%3E%3Ccircle cx='31' cy='35' r='.6'/%3E%3Ccircle cx='9' cy='5' r='.5'/%3E%3C/g%3E%3C/svg%3E") center / 100% 100% luminance;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M1 2 39 1 38.4 39 1.4 38.6Z' fill='%23fff'/%3E%3Cg fill='%23000'%3E%3Ccircle cx='6' cy='33' r='.9'/%3E%3Ccircle cx='34' cy='7' r='.7'/%3E%3Ccircle cx='31' cy='35' r='.6'/%3E%3Ccircle cx='9' cy='5' r='.5'/%3E%3C/g%3E%3C/svg%3E") center / 100% 100% luminance;
+  }
+  .seal-sm { width: 1.75rem; height: 1.75rem; font-size: .82rem; }
+  .seal-lg { width: 2.7rem; height: 2.7rem; font-size: 1.2rem; }
+
+  /* Small text marks: badges and diet tags. */
+  .mark {
+    display: inline-flex; align-items: center; gap: .3rem;
+    padding: .05rem .45rem; border-radius: 2px; border: 1px solid currentColor;
+    font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; line-height: 1.5;
+  }
+  .mark-house { color: var(--gold-ink); }
+  .mark-seasonal, .mark-new { color: var(--jade); }
+  .mark-diet { color: var(--jade); background: var(--jade-soft); border-color: transparent; cursor: help; letter-spacing: .04em; }
+  .mark-soldout { color: var(--muted); border-style: dashed; }
+
+  /* Allergen glyph: a small labelled icon in a ring. */
+  .allergen {
+    display: inline-grid; place-items: center; width: 1.3rem; height: 1.3rem; flex: none;
+    border-radius: 50%; border: 1px solid color-mix(in srgb, var(--muted) 55%, transparent); color: var(--muted); cursor: help;
+  }
+  .allergen svg { width: .85rem; height: .85rem; }
+
+  .chip {
+    display: inline-flex; align-items: center; gap: .4rem;
+    min-height: 2.3rem; padding: .3rem .85rem;
+    border: 1px solid var(--line); border-radius: 999px;
+    background: var(--surface); color: var(--text);
+    font: inherit; font-size: .92rem; font-weight: 600; text-decoration: none; white-space: nowrap; cursor: pointer;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .chip:hover { border-color: var(--gold); }
+  .chip[aria-pressed="true"] { background: var(--jade); border-color: var(--jade); color: var(--bg); }
+  .chip[aria-pressed="true"]::before { content: "✓"; }
+
+  /* Section heading with a large, faint Chinese watermark behind it. */
+  .watermark { position: relative; isolation: isolate; }
+  .watermark::before {
+    /* Decorative: the empty alt text after the slash keeps screen readers from reading it. */
+    content: attr(data-zh); content: attr(data-zh) / ""; position: absolute; z-index: -1; left: -.04em; top: 50%; translate: 0 -54%;
+    font-family: var(--font-zh); font-weight: 600; font-size: clamp(4.2rem, 9vw, 7.5rem); line-height: 1; letter-spacing: .02em; white-space: nowrap;
+    color: var(--gold); opacity: .13; pointer-events: none;
+  }
+}
+
+/* ------------------------------------------------------------------
+   5. Illustrations and animation (SVG art is coloured by the tokens above)
+   ------------------------------------------------------------------ */
+@layer components {
+  /* The lacquered signboard: a glossy red gradient, faint grain and a gold-leaf edge. */
+  .lacquer {
+    color: var(--rail-ink);
+    background:
+      linear-gradient(100deg, transparent 18%, rgba(255, 255, 255, .09) 30%, transparent 44%),
+      repeating-linear-gradient(90deg, rgba(0, 0, 0, .035) 0 1px, transparent 1px 7px),
+      linear-gradient(180deg, var(--rail-1), var(--rail-2) 45%, var(--rail-3));
+  }
+  /* The gold-leaf edge on the right of the rail and under the sign bar. */
+  .leaf-edge-r { box-shadow: inset -5px 0 0 -1px var(--leaf-2), inset -6px 0 0 -1px var(--leaf-3); }
+  .leaf-edge-r::after {
+    content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: 5px; pointer-events: none;
+    background: linear-gradient(180deg, var(--leaf-1), var(--leaf-2) 30%, var(--leaf-1) 55%, var(--leaf-3) 80%, var(--leaf-2));
+  }
+  .leaf-edge-b::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; pointer-events: none;
+    background: linear-gradient(90deg, var(--leaf-3), var(--leaf-1) 30%, var(--leaf-2) 60%, var(--leaf-1) 85%, var(--leaf-3));
+  }
+  /* The board inside the rail that carries the vertical name. */
+  .sign-board {
+    background: linear-gradient(180deg, color-mix(in srgb, var(--rail-board) 80%, #000), var(--rail-board));
+    border: 1px solid var(--rail-line);
+    box-shadow: inset 0 0 0 4px color-mix(in srgb, var(--rail-board) 60%, #000), inset 0 0 0 5px var(--rail-line), 0 6px 18px rgba(0, 0, 0, .25);
+  }
+  .gold-lettering {
+    color: var(--rail-gold);
+    background: linear-gradient(180deg, var(--leaf-1), var(--leaf-2) 55%, var(--leaf-1));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .35));
+  }
+
+  /* Lanterns sway gently from their cords; in dark mode they glow and cast light. */
+  .lantern { transform-box: fill-box; transform-origin: 50% 0; animation: sway 5.5s ease-in-out infinite alternate; }
+  .lantern:nth-child(2) { animation-duration: 6.4s; animation-delay: -2s; }
+  .lantern:nth-child(3) { animation-duration: 4.9s; animation-delay: -1s; }
+  .lantern-glow { opacity: var(--glow-opacity); transition: opacity .6s ease; }
+  .lantern-light { opacity: var(--glow-opacity); animation: glow 3.8s ease-in-out infinite alternate; }
+  /* Warm light spilling from the rail's lanterns onto the page edge (dark mode only). */
+  .lantern-spill {
+    position: fixed; top: -8rem; left: calc(var(--rail-w) - 12rem); width: 34rem; height: 40rem; z-index: 0; pointer-events: none;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--lantern-glow) 30%, transparent), transparent);
+    opacity: var(--glow-opacity);
+  }
+
+  /* Line drawings (steamer, bowl, wok, teapot). Steam rises from the steamer and teapot. */
+  .dish-art { display: block; flex: none; color: var(--art); overflow: visible; }
+  .dish-art .steam { stroke: var(--steam); animation: steam 3.6s ease-in-out infinite; }
+  .dish-art .steam:nth-of-type(2) { animation-delay: -1.2s; }
+  .dish-art .steam:nth-of-type(3) { animation-delay: -2.4s; }
+
+  /* Google Maps embed in a thin gold frame; --map-filter turns it into a night map in dark mode. */
+  .map {
+    position: relative; overflow: hidden; min-height: 20rem; border-radius: var(--radius-card); background: var(--surface-2);
+    border: 1px solid var(--gold); box-shadow: inset 0 0 0 4px var(--surface), inset 0 0 0 5px color-mix(in srgb, var(--gold) 50%, transparent), var(--elev-1);
+    padding: 6px;
+  }
+  .map iframe { position: absolute; inset: 6px; width: calc(100% - 12px); height: calc(100% - 12px); border: 0; border-radius: 2px; filter: var(--map-filter); }
+
+  /* Seal stamps press in as menu rows scroll into view (where supported). */
+  @supports (animation-timeline: view()) {
+    .press-in .seal { animation: press both cubic-bezier(.2, 1.3, .4, 1); animation-timeline: view(); animation-range: entry 0% entry 60%; }
+  }
+
+  @keyframes sway {
+    from { rotate: -2.2deg; }
+    to { rotate: 2.2deg; }
+  }
+  @keyframes glow {
+    from { opacity: calc(var(--glow-opacity) * .75); }
+    to { opacity: var(--glow-opacity); }
+  }
+  @keyframes steam {
+    0% { opacity: 0; translate: 0 4px; }
+    35% { opacity: 1; }
+    100% { opacity: 0; translate: 0 -10px; }
+  }
+  @keyframes press {
+    from { opacity: 0; scale: 1.45; rotate: -8deg; }
+    to { opacity: 1; scale: 1; rotate: 0deg; }
+  }
+}
+
+/* ------------------------------------------------------------------
+   6. Stateful pieces styled by attributes the components set
+   ------------------------------------------------------------------ */
+@layer components {
+  /* Open status: neutral until the browser works out the time (components/open-status.tsx). */
+  .status-dot { width: .6rem; height: .6rem; flex: none; border-radius: 50%; background: currentColor; opacity: .6; }
+  [data-tone="open"] > .status-dot { background: var(--status-open, var(--jade)); opacity: 1; box-shadow: 0 0 0 3px color-mix(in srgb, var(--status-open, var(--jade)) 28%, transparent); }
+  [data-tone="soon"] > .status-dot { background: var(--leaf-1); opacity: 1; box-shadow: 0 0 0 3px color-mix(in srgb, var(--leaf-1) 35%, transparent); }
+  [data-tone="closed"] > .status-dot { background: var(--status-closed, var(--accent-ink)); opacity: 1; }
+  .on-lacquer { --status-open: #8fe0bd; --status-closed: #ffb39c; }
+
+  /* Today's row in the hours lists, marked after the browser knows the day. */
+  .hours-row[data-today="true"] { background: var(--gold-soft); box-shadow: inset 3px 0 0 var(--gold); }
+
+  /* Menu rows */
+  .dish-row:target { background: var(--gold-soft); box-shadow: 0 0 0 1px var(--gold); }
+  .dish-row[data-sold-out="true"] .dish-name, .dish-row[data-sold-out="true"] .dish-price { opacity: .55; }
+  .dish-row[data-sold-out="true"] .seal { background: transparent; color: var(--muted); box-shadow: inset 0 0 0 1.5px var(--muted); }
+  /* Add buttons only work with JavaScript: keep their space so the menu doesn't jump when they appear. */
+  .menu-book:not([data-ready]) .add-button { visibility: hidden; }
+  .add-button[data-count]:not([data-count="0"]) { background: var(--jade); border-color: var(--jade); color: var(--bg); }
+
+  .faq summary { list-style: none; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; flex: none; display: grid; place-items: center; width: 1.6rem; height: 1.6rem; border: 1px solid var(--gold); color: var(--gold-ink); font-size: 1.1rem; font-weight: 600; transition: rotate .2s ease; }
+  .faq[open] summary::after { rotate: 45deg; }
+
+
+  /* Hosted Jamstacks form host (components/jamstacks-support-form.tsx). */
+  .enquiry { position: relative; padding: clamp(1rem, 3vw, 2rem); border-radius: var(--radius-card); background: var(--surface); border: 1px solid var(--gold); box-shadow: inset 0 0 0 4px var(--surface), inset 0 0 0 5px color-mix(in srgb, var(--gold) 40%, transparent), var(--elev-1); }
+  .enquiry__host { display: block; }
+  .enquiry[data-state="loading"], .enquiry[data-state="loaded"] { min-height: 34rem; border-style: dashed; box-shadow: none; }
+  .enquiry__status { padding: 1.25rem 0 0; color: var(--muted); font-size: .9875rem; }
+  .enquiry__status:empty { display: none; }
+  .enquiry[data-state="error"] .enquiry__status,
+  .enquiry[data-state="slow"] .enquiry__status { padding: 1.1rem 1.4rem; border-radius: var(--radius-ui); border-left: 4px solid var(--accent); background: var(--surface-2); color: var(--text); }
+  @media (width < 40rem) { .enquiry[data-state="loading"], .enquiry[data-state="loaded"] { min-height: 30rem; } }
+
+  .copy-status:empty { display: none; }
+  .scrollbar-none { scrollbar-width: none; }
+  .scrollbar-none::-webkit-scrollbar { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  html { scroll-behavior: auto; }
+}
+
+@media print {
+  html, body { background: #fff; color: #000; }
+  .sign-rail, .sign-bar, .lantern-spill, .no-print { display: none !important; }
+  .page-shell { display: block !important; }
+  .seal { background: #fff !important; color: #000 !important; box-shadow: inset 0 0 0 1.5px #000 !important; -webkit-mask: none; mask: none; }
+  .dish-row, .takeaway-line { break-inside: avoid; }
+  .menu-card, .map { box-shadow: none; border-color: #999; }
+  .takeaway-panel { position: static !important; border: 1px solid #000; }
+  .watermark::before { display: none; }
+}

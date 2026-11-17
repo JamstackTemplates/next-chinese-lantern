@@ -1,0 +1,19 @@
+{
+  "name": "Chinese lantern",
+  "description": "An elegant red-lacquer and gold theme for Chinese restaurants and takeaways: a numbered bilingual menu with spice and allergen markers, a takeaway list that adds up dish numbers for phone orders, banquet set menus, opening hours, location and a Jamstacks contact component for banquets, group dining and takeaway questions.",
+  "tech": "next",
+  "type": "chinese",
+  "style": "lantern",
+  "internal": false,
+  "components": [
+    "support-form"
+  ],
+  "configFile": "site.config.json",
+  "screenshots": {
+    "light": "jamstacks/home-light.jpg",
+    "dark": "jamstacks/home-dark.jpg",
+    "theme": {
+      "strategy": "media"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "Acme Dumpling House",
+  "description": "A family-run Cantonese restaurant by Chinatown's Friendship Gate: the numbered menu, weekend dim sum, banquets, opening hours and the number to call for takeaway.",
+  "domain": "next-chinese-lantern.jamstacks.net",
+  "timeZone": "America/New_York",
+  "jamstacks": {
+    "siteId": "",
+    "cdnUrl": "https://cdn.jamstacks.net"
+  }
+}
