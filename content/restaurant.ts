@@ -87,14 +87,14 @@ const dinner = { label: 'Dinner', opens: '17:00', closes: '22:00' } as const;
 const lateDinner = { label: 'Dinner', opens: '17:00', closes: '23:00' } as const;
 
 export const restaurant: Restaurant = {
-  name: 'Acme Dumpling House',
+  name: 'Gam Dang Dumpling House',
   nameZh: '金燈餃子館',
   sealZh: '金燈',
   tagline: 'Cantonese kitchen · dim sum · banquets',
   introduction:
     'A family-run Cantonese restaurant under the Friendship Gate. Dumplings folded by hand every morning, wok-fired dinners every night, and a number to call for takeaway.',
   story: [
-    'Grandma Lau opened the first Acme Dumpling House with four tables, one steamer stack and a menu written on the back of a calendar. The dumplings were folded at the front window so people walking past could watch.',
+    'Grandma Lau opened the first Gam Dang Dumpling House with four tables, one steamer stack and a menu written on the back of a calendar. The dumplings were folded at the front window so people walking past could watch.',
     'Three generations on, the window table is still where the dumplings are folded, from 7am every day. Her son runs the woks, her granddaughter runs the floor and the phones, and the menu still has the numbers the regulars know by heart.',
   ],
   storyPoints: [

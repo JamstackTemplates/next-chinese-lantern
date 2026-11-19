@@ -7,7 +7,7 @@ setup, content editing, deployment and the optional Jamstacks contact form.
 
 - Work in this repository on its current branch unless asked otherwise.
 - Preserve existing changes. Leave edits uncommitted; push or deploy only when requested.
-- Adapt the website to its owner's requested content and features. Replace the sample restaurant (Acme Dumpling
+- Adapt the website to its owner's requested content and features. Replace the sample restaurant (Gam Dang Dumpling
   House, 金燈餃子館), menu, prices, banquets, address, hours and contact details with the owner's real details; the
   fictional examples are starting content.
 

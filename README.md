@@ -4,7 +4,7 @@ An elegant red-lacquer and gold theme for Chinese restaurants and takeaways: a n
 
 It exports to plain static files, deploys to GitHub Pages (custom domain or `/repository/` path) and works with no backend. A tall lacquered signboard runs down the left of the page with the name in vertical gold lettering and a string of lanterns; the menu is a dense numbered list on rice paper. Light mode is "lacquer and rice paper". Dark mode is "lantern-lit night": lacquer black, an oxblood signboard and lanterns that glow. Both follow the visitor's device unless they pick one with the toggle.
 
-**Acme Dumpling House (金燈餃子館)**, its family story, menu, prices, banquets and contact details are fictitious placeholders. The sample address is a public landmark, the Chinatown Friendship Gate (N 10th St and Arch St, Philadelphia, PA), so the map has something real to show. Replace all of them with your own.
+**Gam Dang Dumpling House (金燈餃子館)**, its family story, menu, prices, banquets and contact details are fictitious placeholders. The sample address is a public landmark, the Chinatown Friendship Gate (N 10th St and Arch St, Philadelphia, PA), so the map has something real to show. Replace all of them with your own.
 
 ## Pages
 
@@ -158,7 +158,7 @@ The footer ends with "with ❤️ [jamstacks.net](https://jamstacks.net)". It's 
 
 ```json
 {
-  "name": "Acme Dumpling House",
+  "name": "Gam Dang Dumpling House",
   "description": "A family-run Cantonese restaurant by Chinatown's Friendship Gate: the numbered menu, weekend dim sum, banquets, opening hours and the number to call for takeaway.",
   "domain": "next-chinese-lantern.jamstacks.net",
   "timeZone": "America/New_York",
@@ -270,7 +270,7 @@ jamstacks/              optional template publishing metadata and gallery captur
 
 ## Before publishing your website
 
-- Replace Acme Dumpling House, its Chinese name and seal characters, the address (and its `note`), directions, email, phone, menu, prices, banquets, story, FAQs and social links with your own details. Have a fluent reader check every Chinese name.
+- Replace Gam Dang Dumpling House, its Chinese name and seal characters, the address (and its `note`), directions, email, phone, menu, prices, banquets, story, FAQs and social links with your own details. Have a fluent reader check every Chinese name.
 - Set your real services and `lastOrdersMinutes`, and `timeZone` in `site.config.json`. Check the open status at a few times of day.
 - Choose your 4–6 featured dishes and the weekend dim sum favourites.
 - Replace `domain` in `site.config.json` with your own domain (or `""`). Update the site title/description, icon and social preview image.
